@@ -18,8 +18,8 @@ typedef struct history_s {
 typedef struct alias_s {
     char *str;
     char *alias;
-    struct alias_s *next;
-    struct alias_s *prev;
+    struct history_s *next;
+    struct history_s *prev;
 }alias_t;
 
 typedef struct environment_s {
@@ -75,6 +75,9 @@ int manage_input(char *input, env_t *env, int *child_pid, int *child_return);
 int input_manager(char *input, env_t *env, int *child_pid, pipe_t *pipe);
 
 int redirect_error(char **arr);
+
+int manage_redirect(char *input, env_t *env, int i, pipe_t *pipe);
+int manage_pipe(char *input, env_t *env, int *child_pid, int *child_return);
 
 /*      COMMAND     */
 char **my_unsetenv(char **args, char ***env, int *return_value);

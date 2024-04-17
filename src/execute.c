@@ -22,10 +22,6 @@ static void print_errno(int err, char **args)
 
 static void try_exec_path(char **args, env_t *envir, char **paths)
 {
-    for (alias_t *alias = envir->alias; alias != NULL; alias = alias->next) {
-        if (strcmp(alias->str, args[0]) == 0)
-            printf("ceci est un alias\n");
-    }
     if (paths != NULL) {
         for (int i = 0; paths[i] != NULL; i++)
             execve(concat(concat(paths[i], "/"), args[0]), args, envir->env);
