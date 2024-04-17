@@ -68,6 +68,11 @@ void display_history(history_t *history, int arg);
 void free_history(history_t **history);
 int history_command(char **args, env_t *env, int *return_value);
 
-char **str_to_arr_pipes(char const *str);   
+char **str_to_arr_pipes(char const *str);
+
+//alias
+int alias_command(char **args, env_t *env, int *return_value);
+alias_t *init_alias(void);
+void tr_args_with_alias(char ***args, alias_t *alias);
 
 #endif

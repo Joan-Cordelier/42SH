@@ -18,8 +18,8 @@ typedef struct history_s {
 typedef struct alias_s {
     char *str;
     char *alias;
-    struct history_s *next;
-    struct history_s *prev;
+    struct alias_s *next;
+    struct alias_s *prev;
 }alias_t;
 
 typedef struct environment_s {
@@ -86,5 +86,7 @@ int run_builtins_command(char **args, env_t *env, int *return_value);
 int changedir(char **args, char **env, env_t *envir, int *return_value);
 int changeenvdir(char **env);
 char **my_setenv(char **args, char ***env, int *return_value);
+
+
 
 #endif

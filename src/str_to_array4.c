@@ -12,8 +12,7 @@ static int test_char_spe2(const char *str, int i)
 {
     if (i == 0)
         return 1;
-    if (str[i - 1] == '<' || str[i - 1] == '>' ||
-        str[i - 1] == ';' || str[i - 1] == '|')
+    if (str[i - 1] == ';' || str[i - 1] == '|')
         return 0;
     return 1;
 }
@@ -22,21 +21,16 @@ static int test_char_spe(const char *str, int i)
 {
     if (i == 0)
         return 1;
-    if ((str[i] == '<' && str[i - 1] == '<') ||
-        (str[i] == '>' && str[i - 1] == '>'))
-        return 1;
-    if (str[i - 1] == ' ' || str[i - 1] == '\t' ||
-        str[i - 1] == 0 || str[i - 1] == '\n')
+    if (str[i] == '|' && str[i - 1] == '|')
         return 1;
     return 0;
 }
 
 int test_alphanumeric(char c)
 {
-    if (c == ' ' || c == '\t' || c == 0 || c == '\n') {
+    if (c == '\n' || c == 0)
         return 1;
-    }
-    if (c == '<' || c == '>' || c == ';' || c == '|')
+    if (c == ';' || c == '|')
         return 2;
     return 0;
 }
@@ -92,7 +86,7 @@ int test_end_str(char const *str, int i, int *len)
     return i;
 }
 
-char **my_str_to_word_array(char const *str)
+char **str_to_arr_pipes(char const *str)
 {
     int i = 0;
     int j = 0;
