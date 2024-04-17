@@ -3,10 +3,10 @@ name: Action
 on:
     push:
         branches-ignore:
-            - " ga-ignore-"
+            - "ga-ignore-"
     pull_request:
         branches-ignore:
-            - " ga-ignore-"
+            - "ga-ignore-"
 
 jobs:
     check_repository:
@@ -73,6 +73,8 @@ jobs:
                 done
             - name: make clean
               run: make clean
+            - name: make test run
+              run: make tests_run
 
 
     run_tests:
@@ -83,8 +85,21 @@ jobs:
         steps:
           - name: checkout
             uses: actions/checkout@v4
-          - name: make tests run
-            run: make tests_run
+          - name: run tester.sh
+            run: make; cp 42sh tests/; cd tests/; ./tester.sh | grep KO > /tmp/test.out; rm 42sh; cd ..
+          - name: displays each test not passed
+            run: |
+              input=/tmp/test.out
+              while IFS= read -r -a line; do
+                tab=($(printf "%s" "$line"|cut -d' ' --output-delimiter=' ' -f1-))
+                echo "::error title=${tab[2]} Test number ${tab[1]}: ${tab[4]}"
+              done < $input
+          - name: is any test not passed
+            run: |
+              NB=$(cat /tmp/test.out | wc -l)
+              if [ $NB -gt 1 ]; then
+                exit 1
+              fi
 
 
     push_to_mirror:
