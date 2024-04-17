@@ -85,8 +85,16 @@ jobs:
         steps:
           - name: checkout
             uses: actions/checkout@v4
+          - name: make
+            run: make
+          - name: cp 42sh
+            run: cp 42sh tests/
           - name: run tester.sh
-            run: make; cp 42sh tests/; ./tests/tester.sh | grep KO > /tmp/test.out; rm 42sh; make clean
+            run: ./tests/tester.sh | grep KO > /tmp/test.out
+          - name: clear tests
+            run: rm /tests/42sh
+          - name: clean
+            run: make clean
           - name: displays each test not passed
             run: |
               input=/tmp/test.out
