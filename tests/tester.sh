@@ -2,6 +2,7 @@
 
 MYSHELL="$PWD/42sh"
 REFER="/bin/tcsh -f"
+TESTS="$PWD/tests"
 TRAPSIG=0
 
 CAT=`which cat`
@@ -25,7 +26,7 @@ done
 disp_test()
 {
   id=$1
-  $CAT tests | $GREP -A1000 "\[$id\]" | $GREP -B1000 "^\[$id-END\]" | $GREP -v "^\[.*\]"
+  $CAT $PWD/tests/tests | $GREP -A1000 "\[$id\]" | $GREP -B1000 "^\[$id-END\]" | $GREP -v "^\[.*\]"
 }
 
 run_script()
@@ -128,9 +129,9 @@ then
   done
 fi
 
-if [ ! -f tests ]
+if [ ! -f $PWD/tests/tests ]
 then
-  echo "No tests file. Please read README.ME" >&2
+  echo "No $PWD/tests/tests file. Please read README.ME" >&2
   exit 1
 fi
 
@@ -150,7 +151,7 @@ fi
 
 if [ $# -eq 0 ]
 then
-  for lst in `cat tests | grep "^\[.*\]$" | grep -vi end | sed s/'\['// | sed s/'\]'//`
+  for lst in `cat $PWD/tests/tests | grep "^\[.*\]$" | grep -vi end | sed s/'\['// | sed s/'\]'//`
   do
     path_backup=$PATH
     load_test $lst 1
