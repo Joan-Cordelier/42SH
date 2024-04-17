@@ -23,7 +23,7 @@ OBJLIB	=	$(SRCLIB:.c=.o)
 
 OBJ	=	$(SRC:.c=.o)
 
-CFLAGS  =	-Wall -Wextra -I ./include/ -lncurses
+CFLAGS  =	-Wall -Wextra -I ./include/ -lncurses -g3
 
 LDFLAGS		=	-L. -lmy
 

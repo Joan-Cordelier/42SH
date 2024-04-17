@@ -74,5 +74,6 @@ char **str_to_arr_pipes(char const *str);
 int alias_command(char **args, env_t *env, int *return_value);
 alias_t *init_alias(void);
 void tr_args_with_alias(char ***args, alias_t *alias);
+void reinit_alias(env_t *env);
 
 #endif
