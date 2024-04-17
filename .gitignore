@@ -1,0 +1,14 @@
+42sh
+libmy.a
+seg.c
+a.out
+*.o
+*~
+*.gc*
+*.log
+test
+.vscode
+toto
+*.gcno
+*.gcda
+uni_tests

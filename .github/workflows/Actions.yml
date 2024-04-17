@@ -1,0 +1,103 @@
+name: Action
+
+on:
+    push:
+        branches-ignore:
+            - " ga-ignore-"
+    pull_request:
+        branches-ignore:
+            - " ga-ignore-"
+
+jobs:
+    check_repository:
+        name: check_repository
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout
+              uses: actions/checkout@v4
+            - name: is a mirror répository
+              run: |
+                git remote -v | awk '{print $2}' > test.txt
+                rep=$(head -n 1 test.txt)
+                modified=$(echo "$rep" | sed 's/git@github.com:/https:\/\/github.com\//g')
+                modified=$(echo "$rep" | sed 's/https:\/\/github.com\//git@github.com:/g')
+                echo "$modified.git"
+                if [[ "${modified}.git" == ${{ vars.MIRROR_URL }} ]]
+                then
+                    exit 1
+                else
+                    echo "Good repository"
+                fi
+  
+    check_coding_style:
+        runs-on: ubuntu-latest
+        container: ghcr.io/epitech/coding-style-checker:latest
+        needs: check_repository
+        steps:
+            - name: checkout
+              uses: actions/checkout@v4
+            - name: coding-style $(pwd) $(pwd)
+              run: check.sh . /tmp
+            - name: displays each coding style error
+              run: |
+                input=/tmp/coding-style-reports.log
+                while IFS= read -r -a line; do
+                  tab=($(printf "%s" "$line"|cut -d':' --output-delimiter=' ' -f1-))
+                  echo "::error title=${tab[2]} coding style error: ${tab[0]#./}#${tab[3]#C-}::${tab[3]}"
+                done < $input
+            - name: is any codingstyle error
+              run: |
+                NB=$(cat /tmp/coding-style-reports.log | wc -l)
+                if [ $NB -gt 1 ]; then
+                  exit 1
+                fi
+
+
+    check_program_compilation:
+        runs-on: ubuntu-latest
+        container: epitechcontent/epitest-docker:latest
+        needs: check_coding_style
+        timeout-minutes: 2
+        steps:
+            - name: checkout
+              uses: actions/checkout@v4
+            - name: make
+              run: make
+            - name: is executable
+              run: |
+                for executable in ${{ vars.EXECUTABLES }};do
+                 if [ ! -x "$executable" ]; then
+                  echo "File $executable does not exist or is not executable"
+                  exit 1
+                fi
+                done
+            - name: make clean
+              run: make clean
+
+
+    run_tests:
+        runs-on: ubuntu-latest
+        container: epitechcontent/epitest-docker:latest
+        needs:  check_program_compilation
+        timeout-minutes: 2
+        steps:
+          - name: checkout
+            uses: actions/checkout@v4
+          - name: make tests run
+            run: make tests_run
+
+
+    push_to_mirror:
+        runs-on: ubuntu-latest
+        if: github.event_name == 'push'
+        needs: run_tests
+        steps:
+            - name: checkout
+              uses: actions/checkout@v4
+              with:
+                fetch-depth: 0
+            - name: mirror to epitech repo
+              uses: pixta-dev/repository-mirroring-action@v1
+              with:
+                target_repo_url: ${{ vars.MIRROR_URL }}
+                ssh_private_key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
