@@ -16,6 +16,7 @@ typedef struct history_s {
 }history_t;
 
 typedef struct alias_s {
+    int used;
     char *str;
     char *alias;
     struct alias_s *next;

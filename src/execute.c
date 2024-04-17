@@ -22,9 +22,15 @@ static void print_errno(int err, char **args)
 
 static void try_exec_path(char **args, env_t *envir, char **paths)
 {
-    for (alias_t *alias = envir->alias; alias != NULL; alias = alias->next) {
-        if (strcmp(alias->str, args[0]) == 0)
-            printf("ceci est un alias\n");
+    alias_t *alias = envir->alias;
+
+    while (alias != NULL) {
+        if (strcmp(alias->str, args[0]) == 0 && alias->used == 0) {
+            tr_args_with_alias(&args, alias);
+            alias->used = 1;
+            alias = envir->alias;
+        } else
+            alias = alias->next;
     }
     if (paths != NULL) {
         for (int i = 0; paths[i] != NULL; i++)
