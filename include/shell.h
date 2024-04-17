@@ -77,6 +77,9 @@ int input_manager(char *input, env_t *env, int *child_pid, pipe_t *pipe);
 
 int redirect_error(char **arr);
 
+int manage_redirect(char *input, env_t *env, int i, pipe_t *pipe);
+int manage_pipe(char *input, env_t *env, int *child_pid, int *child_return);
+
 /*      COMMAND     */
 char **my_unsetenv(char **args, char ***env, int *return_value);
 int print_env(char **env);
@@ -84,5 +87,7 @@ int run_builtins_command(char **args, env_t *env, int *return_value);
 int changedir(char **args, char **env, env_t *envir, int *return_value);
 int changeenvdir(char **env);
 char **my_setenv(char **args, char ***env, int *return_value);
+
+
 
 #endif

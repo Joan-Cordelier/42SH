@@ -81,28 +81,6 @@ int manage_redirect(char *input, env_t *env, int i, pipe_t *pipe)
     return child_pid;
 }
 
-int manage_pipe(char *input, env_t *env, int *child_pid, int *child_return)
-{
-    char **pipes = str_to_arr(input, "|");
-    pipe_t *pip = init_pipe(pipes);
-
-    for (int i = 0; pipes[i] != NULL; i++) {
-        pipe(pip->pipefd[i]);
-        pip->index = i;
-        if (pipes[i + 1] != NULL)
-            pip->is_last = 0;
-        if (pipes[i + 1] == NULL)
-            pip->is_last = 1;
-        *child_pid = manage_redirect(pipes[i], env, i, pip);
-    }
-    if (*child_pid > 0) {
-        waitpid(*child_pid, child_return, 0);
-        child_signaled(*child_return);
-    }
-    free(pip);
-    return 0;
-}
-
 int manage_input(char *input, env_t *env, int *child_pid, int *child_return)
 {
     char **commands;
