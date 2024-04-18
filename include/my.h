@@ -76,4 +76,7 @@ alias_t *init_alias(void);
 void tr_args_with_alias(char ***args, alias_t *alias);
 void reinit_alias(env_t *env);
 
+//termios
+int get_input(char **input);
+
 #endif

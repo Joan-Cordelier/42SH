@@ -52,7 +52,6 @@ static int check_input_valid(ssize_t char_read, int child_return, env_t *envir)
 int main(int ac, __attribute__((unused)) char **av, char **env)
 {
     char *input = NULL;
-    size_t size = 0;
     ssize_t char_read = 0;
     int child_return = 0;
     int child_pid;
@@ -63,7 +62,7 @@ int main(int ac, __attribute__((unused)) char **av, char **env)
     while (1) {
         put_prompt();
         reinit_alias(envir);
-        char_read = getline(&input, &size, stdin);
+        char_read = get_input(&input);
         add_history(input, &(envir->history));
         if (!check_input_valid(char_read, child_return, envir))
             continue;
