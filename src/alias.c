@@ -140,6 +140,8 @@ int rm_alias(char *arg, alias_t **alias)
 
 int alias_command(char **args, env_t *env, int *return_value)
 {
+    if (args[0] == NULL)
+        return 0;
     if (strcmp("alias", args[0]) && strcmp("unalias", args[0]))
         return 0;
     *return_value = 0;
@@ -156,8 +158,7 @@ int alias_command(char **args, env_t *env, int *return_value)
         for (int i = 1; args[i] != NULL && *return_value == 0; i++)
             *return_value += rm_alias(args[i], &(env->alias));
     }
-    if (*return_value > 1)
-        *return_value = 1;
+    *return_value = *return_value > 1 ? 1 : *return_value;
     return 1;
 }
 

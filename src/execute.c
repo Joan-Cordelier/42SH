@@ -24,7 +24,7 @@ static void try_exec_path(char **args, env_t *envir, char **paths)
 {
     alias_t *alias = envir->alias;
 
-    while (alias != NULL) {
+    while (alias != NULL && args[0] != NULL) {
         if (strcmp(alias->str, args[0]) == 0 && alias->used == 0) {
             tr_args_with_alias(&args, alias);
             alias->used = 1;
@@ -32,6 +32,8 @@ static void try_exec_path(char **args, env_t *envir, char **paths)
         } else
             alias = alias->next;
     }
+    if (args[0] == NULL)
+        return;
     if (paths != NULL) {
         for (int i = 0; paths[i] != NULL; i++)
             execve(concat(concat(paths[i], "/"), args[0]), args, envir->env);
