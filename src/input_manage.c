@@ -97,7 +97,6 @@ int manage_input(char *input, env_t *env, int *child_pid, int *child_return)
             return 0;
         }
         logical_manager(commands[i], env, child_pid, child_return);
-        //manage_pipe(commands[i], env, child_pid, child_return);
     }
     return 0;
 }

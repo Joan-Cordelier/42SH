@@ -42,7 +42,6 @@ typedef struct pipe_s {
     int output;
     int input;
     int err;
-    int can_execute;
 }pipe_t;
 
 char **string_to_word(char *str);

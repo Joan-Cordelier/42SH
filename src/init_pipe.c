@@ -21,6 +21,5 @@ pipe_t *init_pipe(char **arr)
     pipes->output = STDOUT_FILENO;
     pipes->input = STDIN_FILENO;
     pipes->err = 0;
-    pipes->can_execute = 1;
     return pipes;
 }

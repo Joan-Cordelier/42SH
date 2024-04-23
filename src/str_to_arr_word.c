@@ -23,8 +23,7 @@ static int count_words(char *str, char *word, char *word2)
 
     for (int i = 0; str[i] != 0; i++) {
         if (is_separator(str, word, i) || is_separator(str, word2, i)) {
-            if (i > 0)
-                words++;
+            words = (i > 0) ? words + 1 : words;
             last = i;
             words++;
             i++;
@@ -45,7 +44,8 @@ char **str_to_arr_word(char *str, char *word, char *word2)
     for (int i = 0; str[i] != 0; i++) {
         if (is_separator(str, word, i) || is_separator(str, word2, i)) {
             arr[curr] = copy_string_between(str, start, i - 1);
-            arr[curr + 1] = copy_string_between(str, i, i + my_strlen(word) - 1);
+            arr[curr + 1] = copy_string_between(str, i,
+            i + my_strlen(word- 1));
             start = i + 2;
             curr += 2;
         }
