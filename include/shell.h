@@ -42,6 +42,7 @@ typedef struct pipe_s {
     int output;
     int input;
     int err;
+    int can_execute;
 }pipe_t;
 
 char **string_to_word(char *str);
@@ -79,6 +80,9 @@ int redirect_error(char **arr);
 
 int manage_redirect(char *input, env_t *env, int i, pipe_t *pipe);
 int manage_pipe(char *input, env_t *env, int *child_pid, int *child_return);
+
+int logical_manager(char *input, int *child_return, pipe_t *pip);
+char **str_to_arr_word(char *str, char *word);
 
 /*      COMMAND     */
 char **my_unsetenv(char **args, char ***env, int *return_value);

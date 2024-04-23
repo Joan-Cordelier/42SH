@@ -85,6 +85,7 @@ int manage_input(char *input, env_t *env, int *child_pid, int *child_return)
 {
     char **commands;
 
+    str_to_arr_word(input, "&&");
     if (my_strlen(input) <= 0)
         return 84;
     commands = str_to_arr(input, ";\n");
