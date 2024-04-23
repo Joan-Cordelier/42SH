@@ -9,9 +9,9 @@
 
 static int is_logic(char *input)
 {
-    if (input[0] == '&' && input[1] == '&')
+    if (input[0] == '&')
         return 1;
-    if (input[0] == '|' && input[1] == '|')
+    if (input[0] == '|')
         return 1;
     return 0;
 }
@@ -35,12 +35,12 @@ static int logic_error(char **logics)
 
 static int logic_handler(char *input, int *child_return)
 {
-    if (input[0] == '&' && input[1] == '&') {
+    if (input[0] == '&') {
         if ((*child_return) == 0)
             return 1;
         return 0;
     }
-    if (input[0] == '|' && input[1] == '|') {
+    if (input[0] == '|') {
         if ((*child_return) != 0)
             return 1;
         return 0;
@@ -67,4 +67,5 @@ int logical_manager(char *input, env_t *env, int *child_pid, int *child_return)
             continue;
         manage_pipe(logics[i], env, child_pid, child_return);
     }
+    return 0;
 }
