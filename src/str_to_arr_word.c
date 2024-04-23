@@ -33,7 +33,6 @@ static int count_words(char *str, char *word, char *word2)
     if (last < my_strlen(str) - my_strlen(word) - 1) {
         words++;
     }
-    printf("%d\n", words);
     return words + 1;
 }
 
