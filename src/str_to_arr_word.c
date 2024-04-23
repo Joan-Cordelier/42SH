@@ -16,13 +16,13 @@ static int is_separator(char *str, char *word, int i)
     return 1;
 }
 
-static int count_words(char *str, char *word)
+static int count_words(char *str, char *word, char *word2)
 {
     int words = 0;
     int last = 0;
 
     for (int i = 0; str[i] != 0; i++) {
-        if (is_separator(str, word, i)) {
+        if (is_separator(str, word, i) || is_separator(str, word2, i)) {
             if (i > 0)
                 words++;
             last = i;
@@ -33,25 +33,25 @@ static int count_words(char *str, char *word)
     if (last < my_strlen(str) - my_strlen(word) - 1) {
         words++;
     }
+    printf("%d\n", words);
     return words + 1;
 }
 
-char **str_to_arr_word(char *str, char *word)
+char **str_to_arr_word(char *str, char *word, char *word2)
 {
-    char **arr = malloc(sizeof(char *) * (count_words(str, word) + 1));
+    char **arr = malloc(sizeof(char *) * (count_words(str, word, word2) + 1));
     int start = 0;
     int curr = 0;
 
     for (int i = 0; str[i] != 0; i++) {
-        if (is_separator(str, word, i)) {
+        if (is_separator(str, word, i) || is_separator(str, word2, i)) {
             arr[curr] = copy_string_between(str, start, i - 1);
             arr[curr + 1] = copy_string_between(str, i, i + my_strlen(word) - 1);
             start = i + 2;
             curr += 2;
         }
     }
-    if (my_strlen(word) != my_strlen(str)) {
-        arr[curr] = copy_string_between(str, start, my_strlen(str) - 1);
-    }
+    arr[curr] = copy_string_between(str, start, my_strlen(str) - 1);
+    arr[curr + 1] = NULL;
     return arr;
 }

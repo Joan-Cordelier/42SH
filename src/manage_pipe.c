@@ -35,12 +35,6 @@ int manage_pipe(char *input, env_t *env, int *child_pid, int *child_return)
             pipenb += 1;
             continue;
         }
-        if (pip->can_execute == 0) {
-            continue;
-        }
-        if (logical_manager(pipes[i], child_return, pip) == 0) {
-            continue;
-        }
         set_pipe_value(&pip, pipenb, pipes, i);
         *child_pid = manage_redirect(pipes[i], env, pipenb, pip);
     }

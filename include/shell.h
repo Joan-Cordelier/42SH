@@ -81,8 +81,9 @@ int redirect_error(char **arr);
 int manage_redirect(char *input, env_t *env, int i, pipe_t *pipe);
 int manage_pipe(char *input, env_t *env, int *child_pid, int *child_return);
 
-int logical_manager(char *input, int *child_return, pipe_t *pip);
-char **str_to_arr_word(char *str, char *word);
+int logical_manager(char *input, env_t *env, int *child_pid,
+    int *child_return);
+char **str_to_arr_word(char *str, char *word, char *word2);
 
 /*      COMMAND     */
 char **my_unsetenv(char **args, char ***env, int *return_value);

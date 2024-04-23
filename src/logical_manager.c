@@ -7,16 +7,17 @@
 
 #include "my.h"
 
-int logical_manager(char *input, int *child_return, pipe_t *pip)
+int logical_manager(char *input, env_t *env, int *child_pid, int *child_return)
 {
-    if (input[0] == '&' && input[1] == '&') {
-        if (*child_return == 0) {
-            pip->can_execute = 1;
-            return 0;
+    char **logics = str_to_arr_word(input, "&&", "||");
+
+    for (int i = 0; logics[i] != NULL; i++) {
+        if (logics[i][0] == '&' && logics[i][1] == '&') {
+            continue;
         }
-        pip->can_execute = 0;
-        return 0;
+        if (logics[i][0] == '|' && logics[i][1] == '|') {
+            continue;
+        }
+        manage_pipe(logics[i], env, child_pid, child_return);
     }
-    pip->can_execute = 1;
-    return 1;
 }
