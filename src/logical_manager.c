@@ -53,8 +53,6 @@ int logical_manager(char *input, env_t *env, int *child_pid, int *child_return)
     char **logics = str_to_arr_word(input, "&&", "||");
     int can_exec = 1;
 
-    printf("%s\n", input);
-    my_printarray(logics);
     if (logic_error(logics)) {
         write(2, "Invalid null command.\n", 23);
         (*env->builtins_return) = 1;

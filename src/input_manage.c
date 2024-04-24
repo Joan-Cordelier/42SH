@@ -27,6 +27,8 @@ static void rm_inib_in_args(char **args)
     int inib = 0;
     int j_act;
 
+    if (args == NULL || args[0] == NULL)
+        return;
     for (int i = 0; args[i] != NULL; i++) {
         new = malloc(sizeof(char) * (my_strlen(args[i]) + 1));
         j_act = 0;
