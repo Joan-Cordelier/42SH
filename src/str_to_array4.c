@@ -94,7 +94,7 @@ char **str_to_arr_pipes(char const *str)
 {
     int i = 0;
     int j = 0;
-    char **tab = malloc(my_alloc_tab(str) * sizeof(char *));
+    char **tab = malloc((my_alloc_tab(str)) * sizeof(char *));
     int len = 0;
 
     while (str[i] != 0) {
