@@ -85,7 +85,7 @@ int manage_input(char *input, env_t *env, int *child_pid, int *child_return)
 {
     char **commands;
 
-    if (my_strlen(input) <= 0)
+    if (my_strlen(input) <= 0 || input[0] == '\n')
         return 84;
     commands = str_to_arr(input, ";\n");
     for (int i = 0; commands[i] != NULL; i++) {
