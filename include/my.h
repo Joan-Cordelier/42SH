@@ -71,6 +71,10 @@ int history_command(char **args, env_t *env, int *return_value);
 char **str_to_arr_pipes(char const *str);
 
 //alias
+int add_alias(char *str, alias_t **alias);
+int create_alias(char *str, alias_t **alias);
+void free_alias(alias_t **alias, alias_t *node);
+int free_all_alias(alias_t **alias);
 int alias_command(char **args, env_t *env, int *return_value);
 alias_t *init_alias(void);
 void tr_args_with_alias(char ***args, alias_t *alias);
