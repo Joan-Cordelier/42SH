@@ -44,15 +44,13 @@ char *manage_current_line(char c, char *current_input, size_t *len)
         current_input[(*len) - 1] = '\0';
         if ((*len) >= 1)
             (*len)--;
-    }
-    else {
+    } else {
         if (strlen(current_input) < *len) {
             realloc(current_input, *len);
         }
         current_input = strcat(current_input, (char *)&c);
         (*len) = strlen(current_input);
     }
-    //printf("%s\n", current_input);
     return current_input;
 }
 
@@ -66,7 +64,6 @@ char *recreate_getline(void)
     input[0] = '\0';
     while (1) {
         c = manage_char();
-        //printf("%d\n", c);
         if (c == 4 || c == 3)
             exit(0);
         if (c > 0)
