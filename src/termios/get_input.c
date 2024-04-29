@@ -48,10 +48,10 @@ char *manage_current_line(char c, char *current_input, size_t *len)
             (*len)--;
     } else {
         if (strlen(current_input) < *len)
-            res = realloc(current_input, (*len) * sizeof(char));
+            res = realloc(current_input, ((*len) + 1) * sizeof(char));
         if (res == NULL && strlen(current_input) < *len)
             exit(84);
-        current_input = strcat(current_input, (char *)&c);
+        current_input[*len] = c;
         (*len) = strlen(current_input);
     }
     return current_input;
@@ -63,8 +63,8 @@ char *recreate_getline(void)
     char *input = NULL;
     size_t len = 0;
 
-    input = malloc(sizeof(char) * 2);
-    memset(input, '\0', 2);
+    input = malloc(sizeof(char) * 80);
+    memset(input, '\0', 80);
     while (1) {
         c = manage_char();
         if (c == 4 || c == 3)
