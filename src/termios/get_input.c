@@ -7,6 +7,15 @@
 
 #include "my.h"
 
+static void refrech_output(int len, char *input)
+{
+    printf("\r");
+    for (int i = 0; i < len + 4; i++)
+        printf(" ");
+    printf("\r");
+    printf("$> %s", input);
+}
+
 int my_getchar(void)
 {
     int c = 0;
@@ -71,9 +80,7 @@ char *recreate_getline(void)
             exit(0);
         if (c > 0)
             input = manage_current_line(c, input, &len);
-        printf("\r                                        ");
-        printf("                                        \r");
-        printf("$> %s", input);
+        refrech_output((int)len, input);
         if (c == 10)
             break;
     }
