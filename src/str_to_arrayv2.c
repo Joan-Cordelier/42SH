@@ -65,18 +65,20 @@ static int is_separator(char c, char *separator)
 static int count_word(char *str, char *separator)
 {
     int count = 0;
+    int start = 0;
     int inib = 0;
-    int i;
 
-    for (i = 0; str[i] != '\0'; i++) {
+    for (int i = 0; str[i] != '\0'; i++) {
         test_inib(&inib, str[i]);
-        if (!is_separator(str[i], separator)
-            && (is_separator(str[i + 1], separator) || str[i + 1] == 0)
-            && inib == 0)
-            count++;
+        if (!is_separator(str[i], separator))
+            start = 1;
+        if ((is_separator(str[i], separator) && !is_separator(str[i + 1],
+            separator)) && str[i + 1] != '\0' && inib == 0)
+            count += start;
     }
-    return count;
+    return count + 1;
 }
+
 
 static void str_to_arr_logic(char c, int pos[2], char *separator)
 {
