@@ -48,7 +48,7 @@ jobs:
             - name: is any codingstyle error
               run: |
                 NB=$(cat /tmp/coding-style-reports.log | wc -l)
-                if [ $NB -gt 1 ]; then
+                if [ $NB -gt 0 ]; then
                   exit 1
                 fi
 
