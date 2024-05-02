@@ -83,4 +83,10 @@ void reinit_alias(env_t *env);
 //termios
 int get_input(char **input);
 
+//var
+void tr_args_with_var(char ***args, var_t *var);
+int var_command(char **args, env_t *env, int *return_value);
+int add_var(char *str, var_t **var);
+int create_var(char *str, var_t **var);
+
 #endif

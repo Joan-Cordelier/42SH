@@ -23,7 +23,15 @@ typedef struct alias_s {
     struct alias_s *prev;
 }alias_t;
 
+typedef struct var_s {
+    char *str;
+    char *alias;
+    struct var_s *next;
+    struct var_s *prev;
+}var_t;
+
 typedef struct environment_s {
+    struct var_s *var;
     struct alias_s *alias;
     struct history_s *history;
     char **env;
