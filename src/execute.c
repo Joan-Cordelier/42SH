@@ -7,6 +7,17 @@
 
 #include "my.h"
 
+static void var_testing(var_t *var, char **args, int i, env_t *envir)
+{
+    while (var != NULL && args[i][0] == '$') {
+        if (strcmp(var->str, args[i] + 1) == 0) {
+            tr_args_with_var(&args, var);
+            var = envir->var;
+        } else
+            var = var->next;
+    }
+}
+
 static void print_errno(int err, char **args)
 {
     if (err == ENOEXEC) {
@@ -23,6 +34,7 @@ static void print_errno(int err, char **args)
 static void try_exec_path(char **args, env_t *envir, char **paths)
 {
     alias_t *alias = envir->alias;
+    var_t *var = envir->var;
 
     while (alias != NULL && args[0] != NULL) {
         if (strcmp(alias->str, args[0]) == 0 && alias->used == 0) {
@@ -32,6 +44,8 @@ static void try_exec_path(char **args, env_t *envir, char **paths)
         } else
             alias = alias->next;
     }
+    for (int i = 0; args[i] != NULL; i++)
+        var_testing(var, args, i, envir);
     if (args[0] == NULL)
         return;
     if (paths != NULL) {
