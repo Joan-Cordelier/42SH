@@ -581,7 +581,7 @@ NAME="A pipe with enormous input"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
 CLEAN=""
 TESTS=
-  echo 'ls / -R | cat -e'
+  echo 'ls /dev /dev /bin /dev /dev /dev /bin /dev /dev /dev /bin /dev | cat -e | sort'
 [619-END]
 
 *****************************
