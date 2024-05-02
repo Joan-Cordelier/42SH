@@ -79,7 +79,6 @@ static int count_word(char *str, char *separator)
     return count + 1;
 }
 
-
 static void str_to_arr_logic(char c, int pos[2], char *separator)
 {
     if (is_separator(c, separator) && pos[0] == pos[1]) {
