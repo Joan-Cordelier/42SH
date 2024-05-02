@@ -6,8 +6,9 @@
 ##
 
 SRC	=	$(wildcard src/*.c)				\
-		$(wildcard src/utils/*.c)		\
 		$(wildcard src/commands/*.c)	\
+		$(wildcard src/termios/*.c)		\
+		$(wildcard src/utils/*.c)		\
 
 TESTSRC	=	$(wildcard lib/*.c)				\
 			src/str_to_arrayv2.c			\

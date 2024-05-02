@@ -72,7 +72,7 @@ void tr_args_with_alias(char ***args, alias_t *alias)
     *args = new;
 }
 
-int add_alias(char *str, alias_t **alias)
+int create_alias(char *str, alias_t **alias)
 {
     alias_t *new = malloc(sizeof(alias_t));
     int i[2] = {0, 0};
@@ -119,18 +119,46 @@ static int display_alias(char *arg, alias_t **alias)
     return 0;
 }
 
-int alias_command(char **args, env_t *env, int *return_value)
+int rm_alias(char *arg, alias_t **alias)
 {
-    if (strcmp("alias", args[0]))
-        return 0;
-    *return_value = 0;
-    if (args[1] == NULL) {
-        display_alias(NULL, &(env->alias));
+    int find = 0;
+
+    if (strcmp(arg, "-a") == 0)
+        return free_all_alias(alias);
+    for (alias_t *n = *alias; n != NULL && find == 0; n = n->next) {
+        if (strcmp(arg, n->str) == 0) {
+            free_alias(alias, n);
+            find = 1;
+        }
+    }
+    if (find == 0) {
+        printf("unalias : alias %s not found\n", arg);
         return 1;
     }
-    for (int i = 1; args[i] != NULL; i++) {
-        *return_value += display_alias(args[i], &(env->alias));
+    return 0;
+}
+
+int alias_command(char **args, env_t *env, int *return_value)
+{
+    if (args[0] == NULL)
+        return 0;
+    if (strcmp("alias", args[0]) && strcmp("unalias", args[0]))
+        return 0;
+    *return_value = 0;
+    if (strcmp("alias", args[0]) == 0) {
+        if (args[1] == NULL)
+            display_alias(NULL, &(env->alias));
+        for (int i = 1; args[i] != NULL; i++)
+            *return_value += display_alias(args[i], &(env->alias));
+    } else {
+        if (args[1] == NULL) {
+            printf("unalias : usage : unalias [-a] name [name]\n");
+            *return_value = 1;
+        }
+        for (int i = 1; args[i] != NULL && *return_value == 0; i++)
+            *return_value += rm_alias(args[i], &(env->alias));
     }
+    *return_value = *return_value > 1 ? 1 : *return_value;
     return 1;
 }
 
@@ -138,14 +166,4 @@ void reinit_alias(env_t *env)
 {
     for (alias_t *alias = env->alias; alias != NULL; alias = alias->next)
         alias->used = 0;
-}
-
-alias_t *init_alias(void)
-{
-    alias_t *new = NULL;
-
-    add_alias("grep=grep --color=auto", &new);
-    add_alias("ll=ls -l --color=auto", &new);
-    add_alias("ls=ls --color=auto", &new);
-    return new;
 }

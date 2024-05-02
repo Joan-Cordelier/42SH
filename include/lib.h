@@ -21,6 +21,7 @@
     #include <sys/types.h>
     #include <sys/wait.h>
     #include <unistd.h>
+    #include <termios.h>
     #include <time.h>
 
 #endif /* LIB_H */

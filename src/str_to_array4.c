@@ -12,7 +12,8 @@ static int test_char_spe2(const char *str, int i)
 {
     if (i == 0)
         return 1;
-    if (str[i - 1] == ';' || str[i - 1] == '|')
+    if (str[i - 1] == ';' || (str[i - 1] == '|'
+    || str[i - 1] == '&'))
         return 0;
     return 1;
 }
@@ -23,6 +24,8 @@ static int test_char_spe(const char *str, int i)
         return 1;
     if (str[i] == '|' && str[i - 1] == '|')
         return 1;
+    if (str[i] == '&' && str[i - 1] == '&')
+        return 1;
     return 0;
 }
 
@@ -30,7 +33,8 @@ int test_alphanumeric(char c)
 {
     if (c == '\n' || c == 0)
         return 1;
-    if (c == ';' || c == '|')
+    if (c == ';' || (c == '|'
+    || c == '&'))
         return 2;
     return 0;
 }

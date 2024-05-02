@@ -7,6 +7,40 @@
 
 #include "my.h"
 
+static void rm_inib_in_args2(char c, int *j, int *inib, char *new)
+{
+    if ((c == '\"' || c == '\'') && c == *inib) {
+        *inib = 0;
+        return;
+    }
+    if ((c == '\"' || c == '\'') && *inib == 0) {
+        *inib = c;
+        return;
+    }
+    new[*j] = c;
+    *j += 1;
+}
+
+static void rm_inib_in_args(char **args)
+{
+    char *new;
+    int inib = 0;
+    int j_act;
+
+    if (args == NULL || args[0] == NULL)
+        return;
+    for (int i = 0; args[i] != NULL; i++) {
+        new = malloc(sizeof(char) * (my_strlen(args[i]) + 1));
+        j_act = 0;
+        for (int j = 0; args[i][j] != 0; j++) {
+            rm_inib_in_args2(args[i][j], &j_act, &inib, new);
+        }
+        new[j_act] = 0;
+        free(args[i]);
+        args[i] = new;
+    }
+}
+
 static void pipe_manager(pipe_t *pipe)
 {
     if (!pipe->is_first)
@@ -45,6 +79,7 @@ int input_manager(char *input, env_t *env, int *child_pid, pipe_t *pipe)
     char **args = NULL;
 
     args = str_to_arr(input, " \t\n");
+    rm_inib_in_args(args);
     if (my_arraylen(args) == 0)
         return 84;
     if (pipe->is_last) {
@@ -85,7 +120,7 @@ int manage_input(char *input, env_t *env, int *child_pid, int *child_return)
 {
     char **commands;
 
-    if (my_strlen(input) <= 0)
+    if (my_strlen(input) <= 0 || input[0] == '\n')
         return 84;
     commands = str_to_arr(input, ";\n");
     for (int i = 0; commands[i] != NULL; i++) {
@@ -96,7 +131,7 @@ int manage_input(char *input, env_t *env, int *child_pid, int *child_return)
             *(env->builtins_return) = 1;
             return 0;
         }
-        manage_pipe(commands[i], env, child_pid, child_return);
+        logical_manager(commands[i], env, child_pid, child_return);
     }
     return 0;
 }

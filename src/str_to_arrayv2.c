@@ -7,6 +7,22 @@
 
 #include "my.h"
 
+static void test_inib(int *inib, char c)
+{
+    if (c == '\"') {
+        if (*inib == '\"')
+            *inib = 0;
+        if (*inib == 0)
+            *inib = '\"';
+    }
+    if (c == '\'') {
+        if (*inib == '\'')
+            *inib = 0;
+        if (*inib == 0)
+            *inib = '\'';
+    }
+}
+
 static char *copy_string_between_logic(char *str, int start, int end)
 {
     int len = end - start + 1;
@@ -50,48 +66,51 @@ static int count_word(char *str, char *separator)
 {
     int count = 0;
     int start = 0;
+    int inib = 0;
 
     for (int i = 0; str[i] != '\0'; i++) {
+        test_inib(&inib, str[i]);
         if (!is_separator(str[i], separator))
             start = 1;
         if ((is_separator(str[i], separator) && !is_separator(str[i + 1],
-            separator))
-            && str[i + 1] != '\0')
+            separator)) && str[i + 1] != '\0' && inib == 0)
             count += start;
     }
     return count + 1;
 }
 
-static void str_to_arr_logic(char c, int *start, int *end, char *separator)
+
+static void str_to_arr_logic(char c, int pos[2], char *separator)
 {
-    if (is_separator(c, separator) && *start == *end) {
-            *start += 1;
-            *end += 1;
-        }
+    if (is_separator(c, separator) && pos[0] == pos[1]) {
+        pos[0] += 1;
+        pos[1] += 1;
+    }
     if (!is_separator(c, separator)) {
-            *end += 1;
-        }
+        pos[1] += 1;
+    }
 }
 
 char **str_to_arr(char *str, char *separator)
 {
     char **arr = malloc(sizeof(char *) * (count_word(str, separator) + 1));
-    int start = 0;
-    int end = 0;
+    int pos[2] = {0, 0};
+    int inib = 0;
     int curr = 0;
 
     for (int i = 0; str[i] != '\0'; i++) {
-        str_to_arr_logic(str[i], &start, &end, separator);
-        if (is_separator(str[i], separator) && start != end) {
-            end--;
-            arr[curr] = copy_string_between(str, start, end);
-            start = i + 1;
-            end = i + 1;
+        test_inib(&inib, str[i]);
+        str_to_arr_logic(str[i], pos, separator);
+        if (is_separator(str[i], separator) && pos[0] != pos[1] && inib == 0) {
+            pos[1] -= 1;
+            arr[curr] = copy_string_between(str, pos[0], pos[1]);
+            pos[0] = i + 1;
+            pos[1] = i + 1;
             curr++;
         }
     }
-    if (start != end)
-        arr[curr] = copy_string_between(str, start, end);
+    if (pos[0] != pos[1])
+        arr[curr] = copy_string_between(str, pos[0], pos[1]);
     arr[count_word(str, separator)] = NULL;
     return arr;
 }
