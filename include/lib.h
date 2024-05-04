@@ -24,4 +24,9 @@
     #include <termios.h>
     #include <time.h>
 
+enum {
+    LEFT,
+    RIGHT
+};
+
 #endif /* LIB_H */

@@ -7,84 +7,71 @@
 
 #include "my.h"
 
-static void refrech_output(int len, char *input)
+static void refrech_output(line_t *line)
 {
     printf("\r");
-    for (int i = 0; i < len + 4; i++)
+    for (size_t i = 0; i < line->len_left + 4; i++)
         printf(" ");
-    printf("\r");
-    printf("$> %s", input);
+    printf("\r$> ");
+    printf("%s", line->left);
 }
 
-int my_getchar(void)
+void manage_current_line(char c, line_t *line)
 {
-    int c = 0;
-    static struct termios old;
-    static struct termios new;
-
-    tcgetattr(STDIN_FILENO, &old);
-    new = old;
-    new.c_lflag &= ~(ICANON | ECHO | ISIG);
-    tcsetattr(STDIN_FILENO, TCSANOW, &new);
-    c = getchar();
-    tcsetattr(STDIN_FILENO, TCSANOW, &old);
-    return c;
-}
-
-int manage_char(void)
-{
-    int c = 0;
-    int c1 = 0;
-    int c2 = 0;
-
-    c = my_getchar();
-    if (c == 27) {
-        c1 = my_getchar();
-        c2 = my_getchar();
-    }
-    if (c1 == 91)
-        return c2 - 69;
-    return c;
-}
-
-char *manage_current_line(char c, char *current_input, size_t *len)
-{
-    char *res = NULL;
-
     if (c == 127) {
-        current_input[(*len) - 1] = '\0';
-        if ((*len) >= 1)
-            (*len)--;
+        if (line->len_left >= 1)
+            line->len_left--;
+        line->left[line->len_left] = '\0';
     } else {
-        if (strlen(current_input) < *len)
-            res = realloc(current_input, ((*len) + 1) * sizeof(char));
-        if (res == NULL && strlen(current_input) < *len)
-            exit(84);
-        current_input[*len] = c;
-        (*len) = strlen(current_input);
+        line->left[line->len_left] = c;
+        line->len_left = strlen(line->left);
     }
-    return current_input;
+}
+
+void manage_arrow(char c, line_t *line)
+{
+    if (c == -1) {
+        if (line->len_left < 1)
+            return;
+        line->len_left--;
+    }
+    if (c == -2) {
+        if (line->left[line->len_left] == '\0')
+            return;
+        line->len_left++;
+    }
+}
+
+void init_struct_line(line_t *line)
+{
+    line->left = malloc(sizeof(char) * 1000);
+    memset(line->left, '\0', 1000);
+    line->right = malloc(sizeof(char) * 1000);
+    memset(line->right, '\0', 1000);
+    line->len_left = 0;
+    line->len_right = 0;
 }
 
 char *recreate_getline(void)
 {
     int c = 0;
-    char *input = NULL;
-    size_t len = 0;
+    line_t *line = NULL;
 
-    input = malloc(sizeof(char) * 80);
-    memset(input, '\0', 80);
+    line = malloc(sizeof(line_t));
+    init_struct_line(line);
     while (1) {
         c = manage_char();
-        if (c == 4 || c == 3)
+        if (c == 4)
             exit(0);
         if (c > 0)
-            input = manage_current_line(c, input, &len);
-        refrech_output((int)len, input);
+            manage_current_line(c, line);
+        else
+            manage_arrow(c, line);
+        refrech_output(line);
         if (c == 10)
             break;
     }
-    return input;
+    return line->left;
 }
 
 int get_input(char **input)

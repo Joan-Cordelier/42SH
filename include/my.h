@@ -82,6 +82,8 @@ void reinit_alias(env_t *env);
 
 //termios
 int get_input(char **input);
+int manage_char(void);
+int my_getchar(void);
 
 //var
 void tr_args_with_var(char ***args, var_t *var);
