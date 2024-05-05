@@ -82,6 +82,8 @@ void reinit_alias(env_t *env);
 
 //termios
 int get_input(char **input);
+void line_edition(line_t *line);
+void manage_arrow_left_right(char c, line_t *line);
 int manage_char(void);
 int my_getchar(void);
 

@@ -7,39 +7,13 @@
 
 #include "my.h"
 
-static void refrech_output(line_t *line)
+static void print_final_output(char *str, size_t len)
 {
     printf("\r");
-    for (size_t i = 0; i < line->len_left + 4; i++)
+    for (size_t i = 0; i < len + 4; i++)
         printf(" ");
     printf("\r$> ");
-    printf("%s", line->left);
-}
-
-void manage_current_line(char c, line_t *line)
-{
-    if (c == 127) {
-        if (line->len_left >= 1)
-            line->len_left--;
-        line->left[line->len_left] = '\0';
-    } else {
-        line->left[line->len_left] = c;
-        line->len_left = strlen(line->left);
-    }
-}
-
-void manage_arrow(char c, line_t *line)
-{
-    if (c == -1) {
-        if (line->len_left < 1)
-            return;
-        line->len_left--;
-    }
-    if (c == -2) {
-        if (line->left[line->len_left] == '\0')
-            return;
-        line->len_left++;
-    }
+    printf("%s", str);
 }
 
 void init_struct_line(line_t *line)
@@ -54,24 +28,15 @@ void init_struct_line(line_t *line)
 
 char *recreate_getline(void)
 {
-    int c = 0;
     line_t *line = NULL;
+    char *str = NULL;
 
     line = malloc(sizeof(line_t));
     init_struct_line(line);
-    while (1) {
-        c = manage_char();
-        if (c == 4)
-            exit(0);
-        if (c > 0)
-            manage_current_line(c, line);
-        else
-            manage_arrow(c, line);
-        refrech_output(line);
-        if (c == 10)
-            break;
-    }
-    return line->left;
+    line_edition(line);
+    str = concat(line->left, line->right);
+    print_final_output(str, line->len_left + line->len_right);
+    return str;
 }
 
 int get_input(char **input)
