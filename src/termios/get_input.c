@@ -26,25 +26,25 @@ void init_struct_line(line_t *line)
     line->len_right = 0;
 }
 
-char *recreate_getline(void)
+char *recreate_getline(history_t *history)
 {
     line_t *line = NULL;
     char *str = NULL;
 
     line = malloc(sizeof(line_t));
     init_struct_line(line);
-    line_edition(line);
+    line_edition(line, history);
     str = concat(line->left, line->right);
     print_final_output(str, line->len_left + line->len_right);
     return str;
 }
 
-int get_input(char **input)
+int get_input(char **input, history_t *history)
 {
     size_t size = 0;
 
     if (!(isatty(STDIN_FILENO)))
         return (getline(input, &size, stdin));
-    *input = recreate_getline();
+    *input = recreate_getline(history);
     return 2;
 }

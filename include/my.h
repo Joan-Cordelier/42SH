@@ -81,8 +81,8 @@ void tr_args_with_alias(char ***args, alias_t *alias);
 void reinit_alias(env_t *env);
 
 //termios
-int get_input(char **input);
-void line_edition(line_t *line);
+int get_input(char **input, history_t *history);
+void line_edition(line_t *line, history_t *history);
 void manage_arrow_left_right(char c, line_t *line);
 int manage_char(void);
 int my_getchar(void);

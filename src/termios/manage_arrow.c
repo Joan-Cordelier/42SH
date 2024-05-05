@@ -31,7 +31,7 @@ static char *rm_first_char(char *str)
 
 void manage_arrow_left_right(char c, line_t *line)
 {
-    if (c == -1) {
+    if (c == LEFT_K) {
         if (line->len_left < 1)
             return;
         line->right = my_strcat_begining(
@@ -40,7 +40,7 @@ void manage_arrow_left_right(char c, line_t *line)
         line->len_right++;
         line->left[line->len_left] = '\0';
     }
-    if (c == -2) {
+    if (c == RIGHT_K) {
         if (line->len_right < 1)
             return;
         line->left[line->len_left] = line->right[0];

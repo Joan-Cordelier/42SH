@@ -35,13 +35,13 @@ void manage_current_line(char c, line_t *line)
     }
 }
 
-void manage_arrow(char c, line_t *line)
+void manage_arrow(char c, line_t *line, history_t *history)
 {
-    if (c == -1 || c == -2)
+    if (c == LEFT_K || c == RIGHT_K)
         manage_arrow_left_right(c, line);
 }
 
-void line_edition(line_t *line)
+void line_edition(line_t *line, history_t *history)
 {
     int c = 0;
 
@@ -53,7 +53,7 @@ void line_edition(line_t *line)
         if (c > 0)
             manage_current_line(c, line);
         else
-            manage_arrow(c, line);
+            manage_arrow(c, line, history);
         if (c == 10)
             break;
     }

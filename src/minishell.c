@@ -62,7 +62,7 @@ int main(int ac, __attribute__((unused)) char **av, char **env)
     while (1) {
         put_prompt();
         reinit_alias(envir);
-        char_read = get_input(&input);
+        char_read = get_input(&input, envir->history);
         if (!check_input_valid(char_read, child_return, envir))
             continue;
         add_history(input, &(envir->history));
