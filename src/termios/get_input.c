@@ -22,6 +22,8 @@ void init_struct_line(line_t *line)
     memset(line->left, '\0', 1000);
     line->right = malloc(sizeof(char) * 1000);
     memset(line->right, '\0', 1000);
+    line->history_indice = 0;
+    line->refresh = TRUE;
     line->len_left = 0;
     line->len_right = 0;
 }

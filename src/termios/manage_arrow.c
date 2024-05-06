@@ -7,26 +7,57 @@
 
 #include "my.h"
 
-static char *my_strcat_begining(char c, char *str)
+void reset_line_up(line_t *line, history_t *history)
 {
-    char *cpy = my_strdup(str);
-    int j = 1;
-
-    str[0] = c;
-    for (int i = 0; cpy[i] != '\0'; i++) {
-        str[j] = cpy[i];
-        j++;
+    line->len_right = 0;
+    line->refresh = TRUE;
+    if (line->history_indice == 0)
+        line->history_indice = history->i;
+    else
+        line->history_indice--;
+    for (history_t *temp = history; temp != NULL; temp = temp->next) {
+        if (temp->i == line->history_indice) {
+            line->left = strcpy(line->left, temp->str);
+            line->left = strsub_from_char(line->left, '\n');
+            line->len_left = strlen(line->left);
+        }
     }
-    free(cpy);
-    str[j] = '\0';
-    return str;
 }
 
-static char *rm_first_char(char *str)
+void reset_line_down(line_t *line, history_t *history)
 {
-    for (int i = 0; str[i] != '\0'; i++)
-        str[i] = str[i + 1];
-    return str;
+    line->len_right = 0;
+    line->refresh = TRUE;
+    if (line->history_indice == history->i) {
+        line->history_indice = 0;
+        return;
+    }
+    line->history_indice++;
+    for (history_t *temp = history; temp != NULL; temp = temp->next) {
+        if (temp->i == line->history_indice) {
+            line->left = strcpy(line->left, temp->str);
+            line->left = strsub_from_char(line->left, '\n');
+            line->len_left = strlen(line->left);
+        }
+    }
+}
+
+void manage_arrow_up_down(char c, line_t *line, history_t *history)
+{
+    if (history == NULL)
+        return;
+    if (c == UP_K) {
+        if (line->history_indice == 1)
+            return;
+        reset_line(line);
+        reset_line_up(line, history);
+    }
+    if (c == DOWN_K) {
+        if (line->history_indice == 0)
+            return;
+        reset_line(line);
+        reset_line_down(line, history);
+    }
 }
 
 void manage_arrow_left_right(char c, line_t *line)

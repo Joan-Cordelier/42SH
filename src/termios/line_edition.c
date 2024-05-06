@@ -9,17 +9,20 @@
 
 static void refrech_output(line_t *line)
 {
-    printf("\r");
-    for (size_t i = 0; i < (line->len_left + line->len_right + 5); i++)
-        printf(" ");
-    printf("\r$> ");
-    printf("%s", line->left);
-    printf("\033[C");
-    printf("%s", line->right);
+    if (line->refresh == TRUE) {
+        printf("\r");
+        for (size_t i = 0; i < (line->len_left + line->len_right + 5); i++)
+            printf(" ");
+        printf("\r$> ");
+        printf("%s", line->left);
+        printf("\033[C");
+        printf("%s", line->right);
+    }
 }
 
 void manage_current_line(char c, line_t *line)
 {
+    line->refresh = TRUE;
     if (c == 10) {
         line->right[line->len_right] = c;
         line->len_right++;
@@ -39,6 +42,8 @@ void manage_arrow(char c, line_t *line, history_t *history)
 {
     if (c == LEFT_K || c == RIGHT_K)
         manage_arrow_left_right(c, line);
+    if (c == UP_K || c == DOWN_K)
+        manage_arrow_up_down(c, line, history);
 }
 
 void line_edition(line_t *line, history_t *history)
