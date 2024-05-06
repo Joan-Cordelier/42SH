@@ -10,8 +10,7 @@
 static void print_final_output(char *str, size_t len)
 {
     printf("\r");
-    for (size_t i = 0; i < len + 4; i++)
-        printf(" ");
+    printf("\033[K");
     printf("\r$> ");
     printf("%s", str);
 }

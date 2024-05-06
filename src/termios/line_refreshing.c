@@ -22,11 +22,10 @@ char *my_strcat_begining(char c, char *str)
     return str;
 }
 
-void refrech_line(line_t *line)
+void refrech_line(void)
 {
     printf("\r");
-    for (size_t i = 0; i < (line->len_left + line->len_right + 5); i++)
-        printf(" ");
+    printf("\033[K");
     printf("\r$> ");
     printf("\033[C");
 }
@@ -35,7 +34,7 @@ void reset_line(line_t *line)
 {
     memset(line->left, '\0', 1000);
     memset(line->right, '\0', 1000);
-    refrech_line(line);
+    refrech_line();
 }
 
 char *rm_first_char(char *str)

@@ -89,7 +89,7 @@ int manage_char(void);
 int manage_exclamations(line_t *line, history_t *history);
 int my_getchar(void);
 char *my_strcat_begining(char c, char *str);
-void refrech_line(line_t *line);
+void refrech_line(void);
 void reset_line(line_t *line);
 char *rm_first_char(char *str);
 char *strsub_from_char(char *str, char c);

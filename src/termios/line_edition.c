@@ -10,8 +10,7 @@
 static void refrech_output(line_t *line)
 {
     printf("\r");
-    for (size_t i = 0; i < (line->len_left + line->len_right + 5); i++)
-        printf(" ");
+    printf("\033[K");
     printf("\r$> ");
     printf("%s", line->left);
     printf("\033[C");
