@@ -86,6 +86,7 @@ void line_edition(line_t *line, history_t *history);
 void manage_arrow_left_right(char c, line_t *line);
 void manage_arrow_up_down(char c, line_t *line, history_t *history);
 int manage_char(void);
+int manage_exclamations(line_t *line, history_t *history);
 int my_getchar(void);
 char *my_strcat_begining(char c, char *str);
 void refrech_line(line_t *line);

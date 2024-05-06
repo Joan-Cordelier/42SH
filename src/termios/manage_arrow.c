@@ -10,7 +10,6 @@
 void reset_line_up(line_t *line, history_t *history)
 {
     line->len_right = 0;
-    line->refresh = TRUE;
     if (line->history_indice == 0)
         line->history_indice = history->i;
     else
@@ -27,7 +26,6 @@ void reset_line_up(line_t *line, history_t *history)
 void reset_line_down(line_t *line, history_t *history)
 {
     line->len_right = 0;
-    line->refresh = TRUE;
     if (line->history_indice == history->i) {
         line->history_indice = 0;
         return;
