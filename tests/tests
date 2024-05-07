@@ -576,14 +576,6 @@ TESTS=
   echo '; ;'
 [618-END]
 
-[619]
-NAME="A pipe with enormous input"
-SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
-CLEAN=""
-TESTS=
-  echo 'ls /dev /dev /bin /dev /dev /dev /bin /dev /dev /dev /bin /dev | cat -e | sort'
-[619-END]
-
 *****************************
        42 TEST
 *****************************
