@@ -8,6 +8,14 @@
 #ifndef SHELL_H
     #define SHELL_H
 
+typedef struct line_s {
+    char *left;
+    char *right;
+    int history_indice;
+    size_t len_left;
+    size_t len_right;
+} line_t;
+
 typedef struct history_s {
     int i;
     char *str;

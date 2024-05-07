@@ -81,7 +81,18 @@ void tr_args_with_alias(char ***args, alias_t *alias);
 void reinit_alias(env_t *env);
 
 //termios
-int get_input(char **input);
+int get_input(char **input, history_t *history);
+void line_edition(line_t *line, history_t *history);
+void manage_arrow_left_right(char c, line_t *line);
+void manage_arrow_up_down(char c, line_t *line, history_t *history);
+int manage_char(void);
+int manage_exclamations(line_t *line, history_t *history);
+int my_getchar(void);
+char *my_strcat_begining(char c, char *str);
+void refrech_line(void);
+void reset_line(line_t *line);
+char *rm_first_char(char *str);
+char *strsub_from_char(char *str, char c);
 
 //var
 void tr_args_with_var(char ***args, var_t *var);
