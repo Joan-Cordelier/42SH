@@ -27,7 +27,8 @@ static int logic_error(char **logics)
             return 1;
         if (logics[i][0] == '|' && is_logic(logics[i - 1]))
             return 1;
-        if (logics[i][0] == '&' && logics[i + 1] == NULL)
+        if (logics[i][0] == '&' && logics[i][1] == '&' &&
+            logics[i + 1] == NULL)
             return 1;
     }
     return 0;
