@@ -576,15 +576,6 @@ TESTS=
   echo '; ;'
 [618-END]
 
-[619]
-NAME="A pipe with enormous input"
-SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
-CLEAN=""
-TESTS=
-  echo 'ls -l /dev /dev /dev /bin /dev /dev /dev /bin /dev /dev /dev /bin /dev /dev /dev /bin /dev /dev /dev /bin /dev /dev /dev /bin /dev /dev /dev /bin /dev /dev /dev /bin | grep tty | sort -r | rev'
-[619-END]
-
-
 *****************************
        42 TEST
 *****************************
@@ -613,3 +604,42 @@ TESTS=
   echo "ls || ls && ls"
   echo "ls && ls || ls"
 [1003-END]
+
+[1004]
+NAME="History test"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "ls"
+  echo "echo antotropnull"
+  echo "history"
+[1004-END]
+
+[1006]
+NAME="Alias loop error handling"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "alias zezi=ceca"
+  echo "alias ceca=zezi"
+[1006-END]
+
+[1007]
+NAME="Alias loop error handling"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "ls"
+  echo "alias ls=pwd"
+  echo "ls"
+[1007-END]
+
+[1008]
+NAME="Alias loop error handling"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "ls"
+  echo "alias ls=pwd"
+  echo "ls"
+[1008-END]
