@@ -34,13 +34,11 @@ NAME	=	42sh
 
 TEST	=	uni_tests
 
-all:	$(NAME)
-
-create_lib:	$(OBJLIB)
+$(NAME): $(OBJ) $(OBJLIB)
 	ar rc $(LIBNAME) $(OBJLIB)
-
-$(NAME):	create_lib	$(OBJ)
 	$(CC) -o $(NAME) $(OBJ) $(CFLAGS) $(LDFLAGS)
+
+all: $(NAME)
 
 clean:
 	rm -f $(OBJ)
