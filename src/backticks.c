@@ -91,6 +91,41 @@ int replace_backticks(char *command, env_t *envir)
 {
     int start = -1;
     int end = -1;
+    char **cmd = NULL;
+    char *output = NULL;
+
+    find_backticks(command, &start, &end);
+    if (start == -1 || end == -1) {
+        fprintf(stderr, "Unmatched '`'.\n");
+    }
+    cmd = malloc(sizeof(char *) * 2);
+    cmd[0] = malloc(sizeof(char) * (end - start));
+    if (cmd[0] == NULL) {
+        fprintf(stderr, "Failed to allocate memory.\n");
+        free(cmd);
+        return 1;
+    }
+    strncpy(cmd[0], command + start + 1, end - start - 1);
+    cmd[0][end - start - 1] = '\0';
+    cmd[1] = NULL;
+    output = my_popen(cmd, envir);
+    if (output == NULL) {
+        fprintf(stderr, "Failed to execute command.\n");
+        free(cmd[0]);
+        free(cmd);
+        return 1;
+    }
+    memmove(command + start, output, strlen(output) + 1);
+    free(output);
+    free(cmd[0]);
+    free(cmd);
+    return 0;
+}
+
+/*int replace_backticks(char *command, env_t *envir)
+{
+    int start = -1;
+    int end = -1;
     char *cmd = NULL;
     char *output = NULL;
 
@@ -116,4 +151,4 @@ int replace_backticks(char *command, env_t *envir)
     free(output);
     free(cmd);
     return 0;
-}
+}*/
