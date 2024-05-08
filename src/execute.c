@@ -20,7 +20,7 @@ static void print_errno(int err, char **args)
         }
 }
 
-static void try_exec_path(char **args, env_t *envir, char **paths)
+void try_exec_path(char **args, env_t *envir, char **paths)
 {
     for (alias_t *alias = envir->alias; alias != NULL; alias = alias->next) {
         if (strcmp(alias->str, args[0]) == 0)

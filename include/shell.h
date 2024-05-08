@@ -7,6 +7,7 @@
 
 #ifndef SHELL_H
     #define SHELL_H
+    #define MAX_OUTPUT_SIZE 1024
 
 typedef struct history_s {
     int i;
@@ -83,5 +84,6 @@ int run_builtins_command(char **args, env_t *env, int *return_value);
 int changedir(char **args, char **env, env_t *envir, int *return_value);
 int changeenvdir(char **env);
 char **my_setenv(char **args, char ***env, int *return_value);
-
+int replace_backticks(char *command, env_t *envir);
+void try_exec_path(char **args, env_t *envir, char **paths);
 #endif
