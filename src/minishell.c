@@ -67,7 +67,7 @@ int main(int ac, __attribute__((unused)) char **av, char **env)
         if (!check_input_valid(char_read, child_return, envir))
             continue;
         if (replace_backticks(input, envir))
-           return 1;
+            return 1;
         manage_input(input, envir, &child_pid, &child_return);
     }
     return get_return(child_return, *(envir->builtins_return));

@@ -21,16 +21,15 @@ void child_process(int pipefd[], char **args, env_t *envir)
     close(pipefd[1]);
     fprintf(stderr, "Executing command: %s\n", args[0]);
     paths = get_paths(envir->env);
-    my_printarray(paths);
     try_exec_path(args, envir, paths);
     fprintf(stderr, "Error: Failed to execute command.\n");
 }
 
-//Lit et affiche la sortie du processus enfant.
 static void parent_process(int pipefd[], char *output)
 {
-    close(pipefd[1]);
     ssize_t bytes_read = read(pipefd[0], output, MAX_OUTPUT_SIZE - 1);
+
+    close(pipefd[1]);
     if (bytes_read == -1) {
         return;
     } else {
@@ -40,7 +39,7 @@ static void parent_process(int pipefd[], char *output)
     wait(NULL);
     printf("Output: %s\n", output);
 }
-//Crée un processus enfant pour exécuter une commande et récupère sa sortie.
+
 char *my_popen(char **args, env_t *envir)
 {
     char *output = malloc(sizeof(char) * MAX_OUTPUT_SIZE);
@@ -88,7 +87,6 @@ void find_backticks(const char *command, int *start, int *end)
     }
 }
 
-//Récupère le contenu entre les backticks l'exécute et le remplace
 int replace_backticks(char *command, env_t *envir)
 {
     int start = -1;
@@ -97,19 +95,24 @@ int replace_backticks(char *command, env_t *envir)
     char *output = NULL;
 
     find_backticks(command, &start, &end);
-    if (start == -1 || end == -1)
+    if (start == -1 || end == -1) {
         fprintf(stderr, "Unmatched '`'.\n");
-    cmd = malloc(sizeof(char) * (end - start + 1));
+        return 1;
+    }
+    cmd = malloc(sizeof(char) * (end - start));
     if (cmd == NULL) {
-        fprintf(stderr, "Failed allocate memory\n");
+        fprintf(stderr, "Failed to allocate memory.\n");
+        return 1;
     }
     strncpy(cmd, command + start + 1, end - start - 1);
     cmd[end - start - 1] = '\0';
     output = my_popen(&cmd, envir);
     if (output == NULL) {
         fprintf(stderr, "Failed to execute command.\n");
+        free(cmd);
+        return 1;
     }
-    printf("Output: %s\n", output);
+    memmove(command, output, strlen(output) + 1);
     free(output);
     free(cmd);
     return 0;
