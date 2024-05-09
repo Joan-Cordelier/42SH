@@ -107,6 +107,7 @@ int run_builtins_command(char **args, env_t *env, int *return_value);
 int changedir(char **args, char **env, env_t *envir, int *return_value);
 int changeenvdir(char **env);
 char **my_setenv(char **args, char ***env, int *return_value);
+int which_where_command(char **args, env_t *env, int *return_value);
 
 
 

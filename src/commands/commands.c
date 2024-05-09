@@ -42,6 +42,8 @@ int run_builtins_command(char **args, env_t *env, int *return_value)
         return 1;
     if (var_command(args, env, return_value) == 1)
         return 1;
+    if (which_where_command(args, env, return_value))
+        return 1;
     return 0;
 }
 
