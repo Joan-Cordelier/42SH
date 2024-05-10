@@ -80,12 +80,17 @@ alias_t *init_alias(void);
 void tr_args_with_alias(char ***args, alias_t *alias);
 void reinit_alias(env_t *env);
 
+//job control
+void add_job(pid_t pid, job_t **job);
+void display_all_pid(job_t *job);
+int job_control(job_t *job, int c);
+
 //termios
-int get_input(char **input, history_t *history);
-void line_edition(line_t *line, history_t *history);
+int get_input(char **input, history_t *history, job_t *job);
+void line_edition(line_t *line, history_t *history, job_t *job);
 void manage_arrow_left_right(char c, line_t *line);
 void manage_arrow_up_down(char c, line_t *line, history_t *history);
-int manage_char(void);
+int manage_char(job_t *job);
 int manage_exclamations(line_t *line, history_t *history);
 int my_getchar(void);
 char *my_strcat_begining(char c, char *str);

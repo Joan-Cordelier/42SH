@@ -8,6 +8,12 @@
 #ifndef SHELL_H
     #define SHELL_H
 
+typedef struct job_s {
+    pid_t pid;
+    struct job_s *next;
+    struct job_s *prev;
+} job_t;
+
 typedef struct line_s {
     char *left;
     char *right;
@@ -39,6 +45,7 @@ typedef struct var_s {
 }var_t;
 
 typedef struct environment_s {
+    struct job_s *job;
     struct var_s *var;
     struct alias_s *alias;
     struct history_s *history;
