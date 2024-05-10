@@ -9,8 +9,8 @@
 
 static void reset_line_exclam(line_t *line, char *str)
 {
-    memset(line->left, '\0', 1000);
-    memset(line->right, '\0', 1000);
+    memset(line->left, '\0', 100000);
+    memset(line->right, '\0', 100000);
     printf("\r");
     printf("\033[K");
     printf("\r$> ");
@@ -39,6 +39,8 @@ int manage_exclamations(line_t *line, history_t *history)
     char *str = NULL;
     int end = 0;
 
+    if (history == NULL)
+        return 1;
     str = concat(line->left, line->right);
     str = strsub_from_char(str, '\n');
     if (strcmp(str, "!!") == 0) {

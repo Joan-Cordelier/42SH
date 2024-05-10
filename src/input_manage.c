@@ -88,6 +88,7 @@ int input_manager(char *input, env_t *env, int *child_pid, pipe_t *pipe)
     }
     *(env->builtins_return) = - 1;
     *child_pid = fork();
+    add_job(*child_pid, &(env->job));
     if (*child_pid != 0)
         return 0;
     pipe_manager(pipe);

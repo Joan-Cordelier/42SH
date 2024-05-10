@@ -12,6 +12,7 @@ env_t *init_env(char **env)
     env_t *envir = malloc(sizeof(env_t));
 
     envir->var = NULL;
+    envir->job = malloc(sizeof(job_t));
     envir->alias = init_alias();
     envir->env = env;
     envir->history = NULL;

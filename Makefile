@@ -7,6 +7,7 @@
 
 SRC	=	$(wildcard src/*.c)				\
 		$(wildcard src/commands/*.c)	\
+		$(wildcard src/job_control/*.c)	\
 		$(wildcard src/termios/*.c)		\
 		$(wildcard src/utils/*.c)		\
 

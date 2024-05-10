@@ -32,8 +32,8 @@ void refrech_line(void)
 
 void reset_line(line_t *line)
 {
-    memset(line->left, '\0', 1000);
-    memset(line->right, '\0', 1000);
+    memset(line->left, '\0', 100000);
+    memset(line->right, '\0', 100000);
     refrech_line();
 }
 

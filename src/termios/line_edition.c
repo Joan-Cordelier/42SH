@@ -42,14 +42,14 @@ void manage_arrow(char c, line_t *line, history_t *history)
         manage_arrow_up_down(c, line, history);
 }
 
-void line_edition(line_t *line, history_t *history)
+void line_edition(line_t *line, history_t *history, job_t *job)
 {
     int c = 0;
     int end = 0;
 
     while (1) {
         refrech_output(line);
-        c = manage_char();
+        c = manage_char(job);
         if (c == 4)
             exit(0);
         if (c > 0)
