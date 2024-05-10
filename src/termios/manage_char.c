@@ -22,7 +22,7 @@ int my_getchar(void)
     return c;
 }
 
-int manage_char(void)
+int manage_char(job_t *job)
 {
     int c = 0;
     int c1 = 0;
@@ -35,5 +35,7 @@ int manage_char(void)
     }
     if (c1 == 91)
         return c2 - 69;
+    if (c == 26 || c == 3)
+        return job_control(job, c);
     return c;
 }

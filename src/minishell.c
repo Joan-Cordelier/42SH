@@ -7,12 +7,6 @@
 
 #include "my.h"
 
-int exe(char **commands, char **env)
-{
-    execve(commands[0], commands, env);
-    return 0;
-}
-
 void child_signaled(int child_return)
 {
     int signal;
@@ -62,7 +56,7 @@ int main(int ac, __attribute__((unused)) char **av, char **env)
     while (1) {
         put_prompt();
         reinit_alias(envir);
-        char_read = get_input(&input, envir->history);
+        char_read = get_input(&input, envir->history, envir->job);
         if (!check_input_valid(char_read, child_return, envir))
             continue;
         add_history(input, &(envir->history));

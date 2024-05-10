@@ -24,7 +24,7 @@
     #include <termios.h>
     #include <time.h>
 
-typedef enum arrow_e {
+typedef enum {
     UP_K = -4,
     DOWN_K = -3,
     RIGHT_K = -2,
