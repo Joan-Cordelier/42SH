@@ -9,6 +9,20 @@
     #define SHELL_H
     #define MAX_OUTPUT_SIZE 1024
 
+typedef struct job_s {
+    pid_t pid;
+    struct job_s *next;
+    struct job_s *prev;
+} job_t;
+
+typedef struct line_s {
+    char *left;
+    char *right;
+    int history_indice;
+    size_t len_left;
+    size_t len_right;
+} line_t;
+
 typedef struct history_s {
     int i;
     char *str;
@@ -17,13 +31,23 @@ typedef struct history_s {
 }history_t;
 
 typedef struct alias_s {
+    int used;
     char *str;
     char *alias;
     struct alias_s *next;
     struct alias_s *prev;
 }alias_t;
 
+typedef struct var_s {
+    char *str;
+    char *alias;
+    struct var_s *next;
+    struct var_s *prev;
+}var_t;
+
 typedef struct environment_s {
+    struct job_s *job;
+    struct var_s *var;
     struct alias_s *alias;
     struct history_s *history;
     char **env;
@@ -77,6 +101,13 @@ int input_manager(char *input, env_t *env, int *child_pid, pipe_t *pipe);
 
 int redirect_error(char **arr);
 
+int manage_redirect(char *input, env_t *env, int i, pipe_t *pipe);
+int manage_pipe(char *input, env_t *env, int *child_pid, int *child_return);
+
+int logical_manager(char *input, env_t *env, int *child_pid,
+    int *child_return);
+char **str_to_arr_word(char *str, char *word, char *word2);
+
 /*      COMMAND     */
 char **my_unsetenv(char **args, char ***env, int *return_value);
 int print_env(char **env);
@@ -84,6 +115,5 @@ int run_builtins_command(char **args, env_t *env, int *return_value);
 int changedir(char **args, char **env, env_t *envir, int *return_value);
 int changeenvdir(char **env);
 char **my_setenv(char **args, char ***env, int *return_value);
-int replace_backticks(char *command, env_t *envir);
-void try_exec_path(char **args, env_t *envir, char **paths);
+
 #endif

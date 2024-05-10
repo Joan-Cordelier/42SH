@@ -576,10 +576,70 @@ TESTS=
   echo '; ;'
 [618-END]
 
-[619]
-NAME="A pipe with enormous input"
+*****************************
+       42 TEST
+*****************************
+
+[1001]
+NAME="Simple AND"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
 CLEAN=""
 TESTS=
-  echo 'ls -l /dev /dev /dev /bin /dev /dev /dev /bin /dev /dev /dev /bin /dev /dev /dev /bin /dev /dev /dev /bin /dev /dev /dev /bin /dev /dev /dev /bin /dev /dev /dev /bin | grep tty | sort -r | rev'
-[619-END]
+  echo "ls && ls"
+[1001-END]
+
+[1002]
+NAME="Simple OR"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "ls || ls"
+[1002-END]
+
+[1003]
+NAME="Simple OR and AND"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "ls || ls && ls"
+  echo "ls && ls || ls"
+[1003-END]
+
+[1004]
+NAME="History test"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "ls"
+  echo "echo antotropnull"
+  echo "history"
+[1004-END]
+
+[1006]
+NAME="Alias loop error handling"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "alias zezi=ceca"
+  echo "alias ceca=zezi"
+[1006-END]
+
+[1007]
+NAME="Alias loop error handling"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "ls"
+  echo "alias ls=pwd"
+  echo "ls"
+[1007-END]
+
+[1008]
+NAME="Alias loop error handling"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "ls"
+  echo "alias ls=pwd"
+  echo "ls"
+[1008-END]

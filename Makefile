@@ -6,8 +6,10 @@
 ##
 
 SRC	=	$(wildcard src/*.c)				\
-		$(wildcard src/utils/*.c)		\
 		$(wildcard src/commands/*.c)	\
+		$(wildcard src/job_control/*.c)	\
+		$(wildcard src/termios/*.c)		\
+		$(wildcard src/utils/*.c)		\
 
 TESTSRC	=	$(wildcard lib/*.c)				\
 			src/str_to_arrayv2.c			\
@@ -23,7 +25,7 @@ OBJLIB	=	$(SRCLIB:.c=.o)
 
 OBJ	=	$(SRC:.c=.o)
 
-CFLAGS  =	-Wall -Wextra -I ./include/ -lncurses
+CFLAGS  =	-Wall -Wextra -I ./include/ -lncurses -g3
 
 LDFLAGS		=	-L. -lmy
 
@@ -33,13 +35,11 @@ NAME	=	42sh
 
 TEST	=	uni_tests
 
-all:	$(NAME)
-
-create_lib:	$(OBJLIB)
+$(NAME): $(OBJ) $(OBJLIB)
 	ar rc $(LIBNAME) $(OBJLIB)
-
-$(NAME):	create_lib	$(OBJ)
 	$(CC) -o $(NAME) $(OBJ) $(CFLAGS) $(LDFLAGS)
+
+all: $(NAME)
 
 clean:
 	rm -f $(OBJ)

@@ -7,6 +7,17 @@
 
 #include "my.h"
 
+static void var_testing(var_t *var, char **args, int i, env_t *envir)
+{
+    while (var != NULL && args[i][0] == '$') {
+        if (strcmp(var->str, args[i] + 1) == 0) {
+            tr_args_with_var(&args, var);
+            var = envir->var;
+        } else
+            var = var->next;
+    }
+}
+
 static void print_errno(int err, char **args)
 {
     if (err == ENOEXEC) {
@@ -22,10 +33,21 @@ static void print_errno(int err, char **args)
 
 void try_exec_path(char **args, env_t *envir, char **paths)
 {
-    for (alias_t *alias = envir->alias; alias != NULL; alias = alias->next) {
-        if (strcmp(alias->str, args[0]) == 0)
-            printf("ceci est un alias\n");
+    alias_t *alias = envir->alias;
+    var_t *var = envir->var;
+
+    while (alias != NULL && args[0] != NULL) {
+        if (strcmp(alias->str, args[0]) == 0 && alias->used == 0) {
+            tr_args_with_alias(&args, alias);
+            alias->used = 1;
+            alias = envir->alias;
+        } else
+            alias = alias->next;
     }
+    for (int i = 0; args[i] != NULL; i++)
+        var_testing(var, args, i, envir);
+    if (args[0] == NULL)
+        return;
     if (paths != NULL) {
         for (int i = 0; paths[i] != NULL; i++)
             execve(concat(concat(paths[i], "/"), args[0]), args, envir->env);

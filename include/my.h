@@ -68,8 +68,41 @@ void display_history(history_t *history, int arg);
 void free_history(history_t **history);
 int history_command(char **args, env_t *env, int *return_value);
 
+char **str_to_arr_pipes(char const *str);
+
 //alias
+int add_alias(char *str, alias_t **alias);
+int create_alias(char *str, alias_t **alias);
+void free_alias(alias_t **alias, alias_t *node);
+int free_all_alias(alias_t **alias);
 int alias_command(char **args, env_t *env, int *return_value);
 alias_t *init_alias(void);
+void tr_args_with_alias(char ***args, alias_t *alias);
+void reinit_alias(env_t *env);
+
+//job control
+void add_job(pid_t pid, job_t **job);
+void display_all_pid(job_t *job);
+int job_control(job_t *job, int c);
+
+//termios
+int get_input(char **input, history_t *history, job_t *job);
+void line_edition(line_t *line, history_t *history, job_t *job);
+void manage_arrow_left_right(char c, line_t *line);
+void manage_arrow_up_down(char c, line_t *line, history_t *history);
+int manage_char(job_t *job);
+int manage_exclamations(line_t *line, history_t *history);
+int my_getchar(void);
+char *my_strcat_begining(char c, char *str);
+void refrech_line(void);
+void reset_line(line_t *line);
+char *rm_first_char(char *str);
+char *strsub_from_char(char *str, char c);
+
+//var
+void tr_args_with_var(char ***args, var_t *var);
+int var_command(char **args, env_t *env, int *return_value);
+int add_var(char *str, var_t **var);
+int create_var(char *str, var_t **var);
 
 #endif

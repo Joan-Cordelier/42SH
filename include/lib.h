@@ -21,6 +21,14 @@
     #include <sys/types.h>
     #include <sys/wait.h>
     #include <unistd.h>
+    #include <termios.h>
     #include <time.h>
+
+typedef enum {
+    UP_K = -4,
+    DOWN_K = -3,
+    RIGHT_K = -2,
+    LEFT_K = -1
+} arrow_t;
 
 #endif /* LIB_H */
