@@ -107,8 +107,14 @@ int manage_pipe(char *input, env_t *env, int *child_pid, int *child_return);
 int logical_manager(char *input, env_t *env, int *child_pid,
     int *child_return);
 char **str_to_arr_word(char *str, char *word, char *word2);
+int replace_backticks(char *command, env_t *envir);
+void try_exec_path(char **args, env_t *envir, char **paths);
+char **find_matching(const char *command, const char *pattern,
+    env_t *envir, char **paths);
+bool contains_pattern(const char *str, const char *special_chars);
 
 /*      COMMAND     */
+int which_where_command(char **args, env_t *env, int *return_value);
 char **my_unsetenv(char **args, char ***env, int *return_value);
 int print_env(char **env);
 int run_builtins_command(char **args, env_t *env, int *return_value);

@@ -7,8 +7,10 @@
 
 #include "my.h"
 
-static void var_testing(var_t *var, char **args, int i, env_t *envir)
+static void var_testing(var_t *node, char **args, int i, env_t *envir)
 {
+    var_t *var = node;
+
     while (var != NULL && args[i][0] == '$') {
         if (strcmp(var->str, args[i] + 1) == 0) {
             tr_args_with_var(&args, var);
@@ -66,10 +68,32 @@ static int exec_local(char **args, env_t *envir)
     return 0;
 }
 
+void handle_matching_files(const char *cmd, const char *pattern,
+    env_t *envir, char **paths)
+{
+    char **matching_files = find_matching(cmd, pattern, envir, paths);
+
+    if (matching_files == NULL) {
+        printf("%s: cannot access '%s': No such file or directory\n",
+                cmd, pattern);
+        return;
+    }
+}
+
 void execute(char **args, char **env, env_t *envir)
 {
     char **paths = get_paths(env);
+    const char *pattern = args[1];
+    const char *cmd = args[0];
+    DIR *dir = opendir(".");
+    bool is_pattern = pattern != NULL && contains_pattern(pattern, "*?[]");
 
+    if (dir == NULL)
+        return;
+    if (is_pattern) {
+        handle_matching_files(cmd, pattern, envir, paths);
+        return;
+    }
     if (run_builtins_command(args, envir, envir->builtins_return))
         return;
     if (exec_local(args, envir))

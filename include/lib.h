@@ -23,6 +23,7 @@
     #include <unistd.h>
     #include <termios.h>
     #include <time.h>
+    #include <dirent.h>
 
 typedef enum {
     UP_K = -4,

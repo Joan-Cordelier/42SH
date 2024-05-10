@@ -19,7 +19,6 @@ void child_process(int pipefd[], char **args, env_t *envir)
     close(pipefd[0]);
     dup2(pipefd[1], STDOUT_FILENO);
     close(pipefd[1]);
-    fprintf(stderr, "Executing command: %s\n", args[0]);
     paths = get_paths(envir->env);
     try_exec_path(args, envir, paths);
     fprintf(stderr, "Error: Failed to execute command.\n");
@@ -37,7 +36,6 @@ static void parent_process(int pipefd[], char *output)
     }
     close(pipefd[0]);
     wait(NULL);
-    printf("Output: %s\n", output);
 }
 
 char *my_popen(char **args, env_t *envir)
@@ -64,7 +62,7 @@ char *my_popen(char **args, env_t *envir)
     return output;
 }
 
-void backtick_positions(int *start, int *end, int i)
+static void backtick_positions(int *start, int *end, int i)
 {
     if (*start == -1) {
         *start = i;
@@ -73,7 +71,7 @@ void backtick_positions(int *start, int *end, int i)
     }
 }
 
-void find_backticks(const char *command, int *start, int *end)
+static void find_backticks(const char *command, int *start, int *end)
 {
     int i = 0;
 
@@ -87,6 +85,39 @@ void find_backticks(const char *command, int *start, int *end)
     }
 }
 
+char **extract_command_between_backticks(char *command, int start, int end)
+{
+    char **cmd = malloc(sizeof(char *) * 2);
+
+    if (cmd == NULL) {
+        fprintf(stderr, "Failed to allocate memory.\n");
+        return NULL;
+    }
+    cmd[0] = malloc(sizeof(char) * (end - start));
+    if (cmd[0] == NULL) {
+        fprintf(stderr, "Failed to allocate memory.\n");
+        free(cmd);
+        return NULL;
+    }
+    strncpy(cmd[0], command + start + 1, end - start - 1);
+    cmd[0][end - start - 1] = '\0';
+    cmd[1] = NULL;
+    return cmd;
+}
+
+char *execute_command(char **cmd, env_t *envir)
+{
+    char *output = my_popen(cmd, envir);
+
+    if (output == NULL) {
+        fprintf(stderr, "Failed to execute command.\n");
+        free(cmd[0]);
+        free(cmd);
+        return NULL;
+    }
+    return output;
+}
+
 int replace_backticks(char *command, env_t *envir)
 {
     int start = -1;
@@ -95,60 +126,17 @@ int replace_backticks(char *command, env_t *envir)
     char *output = NULL;
 
     find_backticks(command, &start, &end);
-    if (start == -1 || end == -1) {
+    if ((start != -1 && end == -1) || (start == -1 && end != -1))
         fprintf(stderr, "Unmatched '`'.\n");
-    }
-    cmd = malloc(sizeof(char *) * 2);
-    cmd[0] = malloc(sizeof(char) * (end - start));
-    if (cmd[0] == NULL) {
-        fprintf(stderr, "Failed to allocate memory.\n");
-        free(cmd);
+    if (start == -1 || end == -1)
+        return 0;
+    cmd = extract_command_between_backticks(command, start, end);
+    if (cmd == NULL)
         return 1;
-    }
-    strncpy(cmd[0], command + start + 1, end - start - 1);
-    cmd[0][end - start - 1] = '\0';
-    cmd[1] = NULL;
-    output = my_popen(cmd, envir);
-    if (output == NULL) {
-        fprintf(stderr, "Failed to execute command.\n");
-        free(cmd[0]);
-        free(cmd);
-        return 1;
-    }
-    memmove(command + start, output, strlen(output) + 1);
+    output = execute_command(cmd, envir);
+    printf("Output: %s\n", output);
     free(output);
     free(cmd[0]);
     free(cmd);
     return 0;
 }
-
-/*int replace_backticks(char *command, env_t *envir)
-{
-    int start = -1;
-    int end = -1;
-    char *cmd = NULL;
-    char *output = NULL;
-
-    find_backticks(command, &start, &end);
-    if (start == -1 || end == -1) {
-        fprintf(stderr, "Unmatched '`'.\n");
-        return 1;
-    }
-    cmd = malloc(sizeof(char) * (end - start));
-    if (cmd == NULL) {
-        fprintf(stderr, "Failed to allocate memory.\n");
-        return 1;
-    }
-    strncpy(cmd, command + start + 1, end - start - 1);
-    cmd[end - start - 1] = '\0';
-    output = my_popen(&cmd, envir);
-    if (output == NULL) {
-        fprintf(stderr, "Failed to execute command.\n");
-        free(cmd);
-        return 1;
-    }
-    memmove(command, output, strlen(output) + 1);
-    free(output);
-    free(cmd);
-    return 0;
-}*/
