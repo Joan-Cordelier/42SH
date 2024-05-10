@@ -116,6 +116,7 @@ int changeenvdir(char **env);
 char **my_setenv(char **args, char ***env, int *return_value);
 int which_where_command(char **args, env_t *env, int *return_value);
 
-
+void replace_vars(char **args, env_t *envir);
+char *int_to_str(int nb);
 
 #endif

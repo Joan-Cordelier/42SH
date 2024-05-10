@@ -61,6 +61,8 @@ int main(int ac, __attribute__((unused)) char **av, char **env)
             continue;
         add_history(input, &(envir->history));
         manage_input(input, envir, &child_pid, &child_return);
+        add_var(concat("?=", int_to_str(get_return(child_return,
+        *(envir->builtins_return)))), &(envir->var));
     }
     return get_return(child_return, *(envir->builtins_return));
 }
