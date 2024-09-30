@@ -64,6 +64,12 @@ $(TEST):	fclean
 tests_run:	$(TEST)
 	./$(TEST)
 	gcovr --exclude tests/
-	gcovr --exclude tests/ --branches
+	gcovr --exclude tests/ --txt-metric branch
+
+html_test:	$(TEST)
+	./$(TEST)
+	gcovr --exclude tests/
+	gcovr --exclude tests/ --txt-metric branch --html --html-nested --html-details --html-theme github.dark-blue -o coverage_graph.html
+	firefox coverage_graph.html
 
 .PHONY:	all clean fclean re $(TEST) tests_run
